@@ -1,5 +1,11 @@
-import React, { useReducer } from "react";
+import React, { useReducer, createContext, useMemo } from "react";
+import Form from "./Form-self";
 import Table from "./Table-self";
+
+export const TableContext = createContext({
+  tableData: [],
+  dispatch: () => {},
+});
 
 export const START_GAME = "START_GAME";
 
@@ -50,14 +56,18 @@ const plantMine = (row, cell, mine) => {
     data[ver][hor] = CODE.MINE;
   }
 
+  console.log(data);
+
   return data;
 };
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case value:
-      break;
-
+    case START_GAME:
+      return {
+        ...state,
+        tableData: plantMine(action.row, action.cell, action.mine),
+      };
     default:
       return state;
   }
@@ -65,15 +75,19 @@ const reducer = (state, action) => {
 
 const MineSearch = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { timer, result } = state;
+  const { timer, result, tableData } = state;
+  const value = useMemo(() => ({ tableData, dispatch }), [tableData]);
 
-  return;
-  <>
-    <Form />
-    <div>{timer}</div>
-    <Table></Table>
-    <div>{result}</div>
-  </>;
+  console.log(tableData);
+
+  return (
+    <TableContext.Provider value={value}>
+      <Form />
+      <div>{timer}</div>
+      <Table></Table>
+      <div>{result}</div>
+    </TableContext.Provider>
+  );
 };
 
 export default MineSearch;
