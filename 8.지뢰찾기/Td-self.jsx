@@ -1,7 +1,7 @@
-import React from "react";
+import Reac from "react";
 
 const Td = () => {
-  return <td></td>;
+  return;
 };
 
 export default Td;

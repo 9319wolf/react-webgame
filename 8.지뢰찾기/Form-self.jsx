@@ -1,12 +1,9 @@
-import React, { useState, useCallback, useContext } from "react";
-import { START_GAME } from "./MineSearch-self";
-import { TableContext } from "./MineSearch-self";
+import React, { useState, useCallback } from "react";
 
-const Form = ({ dispatch }) => {
+const Form = () => {
   const [row, setRow] = useState(10);
   const [cell, setCell] = useState(10);
   const [mine, setMine] = useState(20);
-  const value = useContext(TableContext);
 
   const onChangeRow = useCallback((e) => {
     setRow(e.target.value);
@@ -20,12 +17,7 @@ const Form = ({ dispatch }) => {
     setMine(e.target.value);
   }, []);
 
-  const onClickBtn = useCallback(
-    (e) => {
-      dispatch({ type: START_GAME, row, cell, mine });
-    },
-    [row, cell, mine]
-  );
+  const onClickBtn = useCallback(() => {}, []);
 
   return (
     <div>
@@ -43,7 +35,7 @@ const Form = ({ dispatch }) => {
       />
       <input
         type="number"
-        placeholder="지뢰"
+        placeholder="지로"
         value={mine}
         onChange={onChangeMine}
       />
