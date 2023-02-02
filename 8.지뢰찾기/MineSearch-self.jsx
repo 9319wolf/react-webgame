@@ -8,6 +8,7 @@ export const TableContext = createContext({
 });
 
 export const START_GAME = "START_GAME";
+export const OPEN_CELL = "OPEN_CELL";
 
 export const CODE = {
   MINE: -7,
@@ -56,8 +57,6 @@ const plantMine = (row, cell, mine) => {
     data[ver][hor] = CODE.MINE;
   }
 
-  console.log(data);
-
   return data;
 };
 
@@ -68,6 +67,16 @@ const reducer = (state, action) => {
         ...state,
         tableData: plantMine(action.row, action.cell, action.mine),
       };
+    case OPEN_CELL: {
+      const tableData = [...state.tableData];
+      tableData[action.row] = [...state.tableData[action.row]];
+      tableData[action.row][action.cell] = CODE.OPENED;
+
+      return {
+        ...state,
+        tableData,
+      };
+    }
     default:
       return state;
   }
@@ -77,8 +86,6 @@ const MineSearch = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { timer, result, tableData } = state;
   const value = useMemo(() => ({ tableData, dispatch }), [tableData]);
-
-  console.log(tableData);
 
   return (
     <TableContext.Provider value={value}>
