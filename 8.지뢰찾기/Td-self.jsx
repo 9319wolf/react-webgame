@@ -72,6 +72,7 @@ const Td = ({ rowIndex, cellIndex }) => {
     }
   }, [tableData[rowIndex][cellIndex]]);
 
+  // 8-4 11분
   const onRightClickTd = useCallback(
     (e) => {
       e.preventDefault();
