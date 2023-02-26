@@ -1,6 +1,12 @@
 import React, { useCallback, useContext } from "react";
 import { CODE, TableContext } from "./MineSearch-self";
-import { OPEN_CELL } from "./MineSearch-self";
+import {
+  OPEN_CELL,
+  CLICK_MINE,
+  FLAG_CELL,
+  QUESTION_CELL,
+  NORMALIZE_CELL,
+} from "./MineSearch-self";
 
 const getTdStyle = (code) => {
   switch (code) {
@@ -51,9 +57,12 @@ const getTdText = (code) => {
 };
 
 const Td = ({ rowIndex, cellIndex }) => {
-  const { tableData, dispatch } = useContext(TableContext);
+  const { tableData, dispatch, halted } = useContext(TableContext);
 
   const onClickTd = useCallback(() => {
+    if (halted) {
+      return;
+    }
     switch (tableData[rowIndex][cellIndex]) {
       case CODE.OPENED:
       case CODE.FLAG_MINE:
@@ -65,38 +74,38 @@ const Td = ({ rowIndex, cellIndex }) => {
         dispatch({ type: OPEN_CELL, row: rowIndex, cell: cellIndex });
         return;
       case CODE.MINE:
-        // dispatch({ type: CLICK_MINE, row: rowIndex, cell: cellIndex });
+        dispatch({ type: CLICK_MINE, row: rowIndex, cell: cellIndex });
         return;
       default:
         return;
     }
-  }, [tableData[rowIndex][cellIndex]]);
+  }, [tableData[rowIndex][cellIndex], halted]);
 
   // 8-4 11분
   const onRightClickTd = useCallback(
     (e) => {
       e.preventDefault();
-      // if (halted) {
-      //   return;
-      // }
+      if (halted) {
+        return;
+      }
       switch (tableData[rowIndex][cellIndex]) {
         case CODE.NORMAL:
         case CODE.MINE:
-          // dispatch({ type: FLAG_CELL, row: rowIndex, cell: cellIndex });
+          dispatch({ type: FLAG_CELL, row: rowIndex, cell: cellIndex });
           return;
         case CODE.FLAG_MINE:
         case CODE.FLAG:
-          // dispatch({ type: QUESTION_CELL, row: rowIndex, cell: cellIndex });
+          dispatch({ type: QUESTION_CELL, row: rowIndex, cell: cellIndex });
           return;
         case CODE.QUESTION_MINE:
         case CODE.QUESTION:
-          // dispatch({ type: NORMALIZE_CELL, row: rowIndex, cell: cellIndex });
+          dispatch({ type: NORMALIZE_CELL, row: rowIndex, cell: cellIndex });
           return;
         default:
           return;
       }
     },
-    [tableData[rowIndex][cellIndex]]
+    [tableData[rowIndex][cellIndex], halted]
   );
 
   return (
