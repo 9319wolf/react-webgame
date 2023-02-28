@@ -76,8 +76,7 @@ const reducer = (state, action) => {
       };
     case OPEN_CELL: {
       const tableData = [...state.tableData];
-      tableData[action.row] = [...state.tableData[action.row]];
-      tableData[action.row][action.cell] = CODE.OPENED;
+      tableData.forEach();
       let around = [];
       if (tableData[action.row - 1]) {
         around = around.concat(
